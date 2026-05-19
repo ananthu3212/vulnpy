@@ -1,17 +1,8 @@
-ARG PYTHON_VERSION=3.8
-FROM python:${PYTHON_VERSION}-slim
-
-RUN apt-get update && apt-get install -y build-essential autoconf
-RUN pip install -U contrast-agent
-
+FROM python:3.9-slim
+RUN apt-get update && apt-get install -y \
+    build-essential libxml2-dev libxslt-dev \
+    && apt-get clean
 WORKDIR /vulnpy
 COPY . .
-
-RUN pip install -e .[all]
-
-ENV PORT="3010"
-ENV FRAMEWORK="flask"
-ENV HOST="0.0.0.0"
-ENV VULNPY_USE_CONTRAST="true"
-
-CMD make ${FRAMEWORK}
+RUN pip install -e ".[flask]"
+EXPOSE 3010
